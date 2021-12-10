@@ -1,0 +1,440 @@
+---
+title: "Riboviz: a new user's guide"
+author: "Flic Anderson"
+date: "16/12/2021"
+output: 
+  ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+      $('slide:not(.title-slide, .backdrop, .segue)').append('<footer label=\"bit.ly/riboviz-new-users"></footer>');    
+    })
+</script>
+
+<style>
+  footer:after {
+    content: attr(label);
+    font-size: 12pt;
+    position: absolute;
+    bottom: 20px;
+    left: 700px;
+    line-height: 1.9;
+  }
+</style>
+
+<style type="text/css">
+slides > slide:not(.nobackground):after {
+  content: '';
+}
+</style>
+
+<div class="notes">
+
+Bio: 
+
+Flic Anderson has been a Research Assistant in Bioinformatics in the Wallace Lab (within the Institute for Cell Biology) at the University of Edinburgh (July 2019 - December 2021). The Wallace Lab works to understand how translation works within cells (particularly of fungi) and what factors control and regulate protein synthesis. 
+
+Flic is part of the development team for the 'riboviz' open source software package for processing and analysis of ribosome profiling data, working with colleagues from EPCC (University of Edinburgh) to make the codebase more robust & sustainable.   
+
+With a background in Ecology and Botany (previously a Research Assistant at the Royal Botanic Garden Edinburgh), Flic has worked with a wide range of types of biological data using different software tools and programming languages (particularly R) for the last 8 years, and found herself drawn towards bioinformatics and research software engineering. 
+
+Flic is a member of the Edinburgh Carpentries and a certified Carpentries instructor in foundational coding and data science skills for researchers. 
+
+
+Title: Riboviz: a new user's guide
+
+
+Abstract:  
+
+Explaining how new users can get started with 'riboviz' open source software package for processing and analysing ribosome profiling (RNA sequence) data.
+
+</div>
+
+
+
+## HOW TO (RE-)USE THIS MATERIAL
+
+This is a `.html` presentation created in `R Markdown` with `ioslides`. 
+
+(It's been written in a [.Rmd](http://rmarkdown.rstudio.com) file, and I generated .html slides by 'knitting' it in Rstudio.)
+
+You can check out the code used to make these slides at the [Talk repo](https://github.com/FlicAnderson/LabRetreat_20211108) on Github, and adapt it for your own presentations if you like - there's a MIT Licence on the repo, which means: 
+
+*"Basically, you can do whatever you want as long as you include the original copyright and license notice in any copy of the software/source."*
+
+Source: [tl;drLegal](https://tldrlegal.com/license/mit-license)
+
+
+## Me!
+
+<div style="float: left; width: 30%;">
+```{r, out.width = "300"}
+knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/EdinbR-20210519/main/images/Me.jpg")
+```  
+
+[GitHub](https://github.com/FlicAnderson), [Twitter](https://twitter.com/Flic_Anderson), [LinkedIn](https://www.linkedin.com/in/flicanderson/)
+</div>
+
+<div style="float: right; width: 55%;">
+### Felicity 'Flic' Anderson  
+
+**Research Assistant in Bioinformatics** at the [Wallace Lab](https://ewallace.github.io/), Institute for Cell Biology, University of Edinburgh  
+
+* **developer** on riboviz project; co-supervised 3 undergrad & 1 masters student projects
+* certified **[Carpentries](https://carpentries.org/) instructor** (foundational data, software & coding courses)
+</div>
+
+<div class="notes"> 
+
+https://raw.githubusercontent.com/FlicAnderson/EdinbR-20210519/main/images/Me.jpg
+
+https://ewallace.github.io/ - Wallace lab website
+
+https://edcarp.github.io/ - Edinburgh Carpentries, local chapter of The Carpentries organisation (https://carpentries.org/)
+</div>
+
+
+
+
+
+## Outline: 
+
+* Riboviz & Ribosome Profiling 
+* How Riboviz Works
+
+
+
+These slides are available [on GitHub](https://github.com/FlicAnderson/20211216-LabTalk-riboviz)
+
+## Riboviz
+
+**Riboviz is open source software which processes & analyses ribosome profiling (sequencing) data**  
+
+*Developed in collaborative project BBSRC-NSF funded project* - apply software engineering techniques to create more robust & reliable code: _**more researcher time** for biological questions_
+
+Ribosome profiling data helps unlock details of **translation**:   
+_how the cell creates proteins from genetic code (DNA, RNA)_ 
+
+riboviz helps researchers check **quality control** & understand the **characteristics** of the experimental data - ie. _do different experimental conditions change how the cell translates proteins from genes?_ 
+
+
+<font size="2">riboviz at github: https://github.com/riboviz/riboviz</font>
+
+<div class="notes">
+Riboviz 2.0 pre-print: https://www.biorxiv.org/content/10.1101/2021.05.14.443910v1.full
+</div>
+
+
+
+## Thanks/Acknowledgements
+
+riboviz is a BBSRC-NSF funded collaborative project: 
+
+* **The Wallace Lab** - *University of Edinburgh*:  
+Edward Wallace, + past students (Ania Kurowska, Siyin Xue, Emma MacKenzie, Sophie Winterbourne)  
+* **The Shah Lab** -  *Rutgers University*:  
+Premal Shah, John Favate, Alex Cope, Peter Tilton  
+* **The Lareau Lab** - *University of California, Berkeley*:  
+Liana Lareau, Amanda Mok, Vikram Shivakumar  
+* **EPCC** - *University of Edinburgh*:  
+Kostas Kavousannakis, Mike Jackson, Junchen Liu  
+
+<div class="notes">
+... slide notes ...
+</div>
+
+
+
+## Ribosome Profiling Method 
+
+<div style="float: left; width: 70%;">
+```{r, out.width = "525"}
+knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/EdinbR-20210519/main/images/Ingolia2014_polysomes-to-footprints.png")
+```
+<font size="2">[Ingolia et al. 2014](https://doi.org/10.1038/nrg3645)</font>
+</div>
+
+<div style="float: right; width: 30%;">
++ Experimental steps create snippets of **sequence data**
++ Need to **process** sequence reads to 'undo' the experimental steps 
++ **Analyse** to get plots & information
++  **=> riboviz time!**
+</div>
+
+<div class="notes">
+
+Ribosome Profiling Method involves many experimental steps. 
+
+Processing this data involves effectively trying to 'undo' these steps to get at the meaning of what's happening in those cells.
+
+Sequencing 'reads' are the data we're working with.
+
+Take these reads & submit to further processing & analysis to get plots & information.
+
+That’s where riboviz comes in!
+
+Processing:
+Multiple steps using a range of other tools ‘plumbed-in’.
+
+Analysis:
+Analyse & quantify data: 
+Create outputs (including for quality-control, further analysis)
+
+Original paper: Ingolia NT, Ghaemmaghami S, Newman JR, Weissman JS (2009). "Genome-wide analysis in vivo of translation with nucleotide resolution using ribosome profiling". Science. 324 (5924): 218–23. doi:10.1126/science.1168978
+
+</div>
+
+
+
+## Riboviz Workflow: Inputs
+
+<div class="centered">
+```{r, out.width = "800"}
+knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/LabTalk-riboviz-20210510/main/images/riboviz-workflow_inputs.png")
+``` 
+</div>
+
+<div class="notes"> 
+
+Additional organism-specific data files: ie the pipeline can run without them, but will not produce specific plots without them. 
+
+</div> 
+
+
+## Riboviz Workflow: Processing
+
+<div class="centered">
+```{r, out.width = "800"}
+knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/LabTalk-riboviz-20210510/main/images/riboviz-workflow_processing-aligned.png")
+``` 
+</div>
+
+<div class="notes"> 
+
+Processing:  
+* Removing adapter sequences  
+* Remove UMIs (Unique Molecular Identifiers) & barcodes if present  
+* Demultiplex / Deduplicate reads if required  
+* Need to filter out contaminant reads  
+* Align reads to transcriptome   
+
+</div>
+
+
+## Riboviz Workflow: Processing
+
+<div class="centered">
+```{r, out.width = "800"}
+knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/LabTalk-riboviz-20210510/main/images/riboviz-workflow_processing-ribogrid.png")
+``` 
+</div>
+
+<div class="notes">
+
+Storing data in really efficient .h5 format (hierarchical, like a file system w/ folders type of organisation)
+
+</div>
+
+
+## Riboviz Workflow: Analysis
+
+<div class="centered">
+```{r, out.width = "800"}
+knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/LabTalk-riboviz-20210510/main/images/riboviz-workflow_analysis.png")
+``` 
+</div>
+
+<div class="notes">
+
+Analyse & quantify data:   
+Create outputs (including for quality-control, further analysis)
+
+One main R script which generates these plots & various analysis data; this is run for each sample, outputting .tsv and .pdf files into a folder for each sample within the overall dataset output folder.
+
+</div>
+
+
+
+## Riboviz Workflow: + Visualization
+
+<div class="centered">
+```{r, out.width = "800"}
+knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/LabTalk-riboviz-20210510/main/images/riboviz-workflow_visualization.png")
+``` 
+</div>
+
+<div class="notes">
+
+As part of making riboviz more user-friendly, wanted to generate a per-sample .html report based on the summary data and pdf outputs already generated by riboviz
+
+</div>  
+
+
+
+## What Riboviz Does Well
+
+* it works
+  - on many datasets 
+  - from many species
+  - for many people
+* quality control figures are informative
+* easy to add new data for same transcriptome/organism
+* visualization
+* thoroughly documented
+
+[Riboviz 2.0 pre-print](https://www.biorxiv.org/content/10.1101/2021.05.14.443910v1.full)
+
+
+## What I've Enjoyed About Riboviz: 
+
+* being **part of a team** on a research software development project
+* **learning better practices** in software development 
+* **training others** in software tools & techniques 
+* finding out about **what helps/hinders new users** & researchers
+
+ -> starting PhD in Jan 2022:  
+     *What aspects of Research Software projects generate effective & successful software?*  
+    
+  tools, techniques, teaching & environmental factors
+
+
+
+## Questions & A Challenge For You
+
+If you are a software user or developer...  
+**does your scientific method & hypothesis-thinking extend to your software?** 
+
+
+* do you know how to **test** your software like it's a hypothesis? 
+* could someone else **reproduce** your use of software for research and get the same results? 
+* would you **evaluate** data from a new software tool with the same mindset as from an untested wet lab protocol or uncalibrated item of equipment? 
+
+
+*Approach use of research software tools scientifically too!*
+
+
+# Questions For Me?
+
+
+<div class="notes">
+... slide notes ...
+</div> 
+
+
+
+
+
+## Features of Ribosome Profiling Data
+
+* Looking for **3-nucleotide periodicity**: ribosomes moving along mRNA transcript 1 codon (3 nucleotides) at a time  
+
+* Most reads **map to coding regions** (98.8% in Ingolia et al. 2009)  
+* Reasonable read-lengths (e.g. should look for **~28-30NT**)  
+
+* Looking for most reads to be **in one frame**  
+
+
+<font size="2">[Ingolia et al. 2009](https://doi.org/10.1126/science.1168978)</font>
+
+<div class="notes">
+
+[Ingolia et al. 2009 - Science 324(5924):218-23 "Genome-wide analysis in vivo of translation with nucleotide resolution using ribosome profiling", doi: 10.1126/science.1168978](https://doi.org/10.1126/science.1168978).
+
+28-30NT due to the 'width' of the ribosome as this is what 'protected' the mRNA from the nucleases in the experiment's library preparation steps.
+
+</div>
+
+## RPF Data & Reading Frame 
+
+
+<div class="centered">
+```{r, out.width = "700"}
+knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/LabTalk-riboviz-20210510/main/images/riboviz-output_frame.png")
+``` 
+</div>
+
+Many of riboviz's output plots let us examine these features.  
+
+
+<font size="2">Reading Frame: https://www.ncbi.nlm.nih.gov/Class/MLACourse/Original8Hour/Genetics/readingframe.html; Data: Guydosh & Green (2014). DOI: [10.1016/j.cell.2014.02.006](https://doi.org/10.1016/j.cell.2014.02.006).</font>
+
+
+<div class="notes">
+
+Ribosome profiling data is really useful for investigating translational mechanics particularly because of the information it provides about the active open reading frame!
+
+Because a codon is 3 nucleotides, where a ribosome 'starts' reading the mRNA will affect what's translated. 
+
+Can locate the start codon ‘AUG’ (from annotation position information from a .gff or sequence info) & determine what should be the reading frame based on that. 
+
+Can determine which reading frame(s) are being actively translated from the counts of reads sequenced which match each frame. Can look at if this is altered by particular characteristics of the gene or sequence for example.
+
+Outputs like these help users determine whether the data looks as expected (assists QC).  
+
+Data: Guydosh & Green (2014). “Dom34 rescues ribosomes in 3' untranslated regions.” Cell. 156 (5): 950-62. doi: 10.1016/j.cell.2014.02.006.   
+
+</div>
+
+
+
+
+## Riboviz Workflow: .PDF Outputs
+
+<div class="centered">
+```{r, out.width = "800"}
+knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/LabTalk-riboviz-20210510/main/images/riboviz-workflow_outputs.png")
+``` 
+</div>  
+
+
+<div class="notes">
+
+Original outputs: .tsv data files and .pdf plot images for each sample. 
+
+Dataset shown: B-Sc_2012: Saccharomyces cerevisiae yeast RPF samples at a range of meiotic phases from: High-resolution View of the Yeast Meiotic Program Revealed by Ribosome Profiling, Brar et al. 2012. https://doi.org/10.1126/science.1215110
+
+Files present: ‘all’ - not all organisms have the same amount of data availale, and so information on tRNAs for example isn't available for all species, or isn't currently in a riboviz friendly format.  
+
+This means we have some 'conditional' outputs. Not all taxa will have all of these outputs, which is something we've had to handle in the code. 
+
+Yaml config file available at https://github.com/riboviz/example-datasets/blob/master/fungi/saccharomyces/Brar_2012_Meiosis_RPF_6-samples_CDS_w_250utrs_config.yaml
+
+This was a dataset selected by Ania Kurowska (undergrad project in the Wallace lab, 2020)
+
+</div>
+
+
+
+## How Riboviz Works
+
+Riboviz has lots of steps - some of which run external tools (like [`cutadapt`](https://cutadapt.readthedocs.io/en/stable/) for removing adapters from mRNA transcript sequences), some of which are bespoke processing or analysis code.
+
+Biological data pipelines can often be unweildy... We use a Workflow Management System called **[Nextflow](https://www.nextflow.io/)**  
+
+Nextflow handles the admin-related tasks for us (check **files exist**, create **log files**, queue & **run tasks efficiently**)
+
+Helps with: reproducibility & logging, helpful error handling procedures, ease of use & re-running, usable by other researchers elsewhere! 
+
+<font size="2">Jackson, Kavoussanakis & Wallace. (2021). [Using prototyping to choose a bioinformatics workflow management system](https://doi.org/10.1371/journal.pcbi.1008622)</font>  
+
+
+<div class="notes">  
+
+https://www.nextflow.io/
+
+Find out more: Nextflow Carpentries style workshop (alpha!) lesson materials under development https://carpentries-incubator.github.io/workflows-nextflow/
+
+Nextflow connects 'processes' (the steps or tasks) according to their outputs and inputs to other processes. 
+ 
+Nextflow combines a **runtime environment** (the stuff that runs other stuff) and a **domain specific language** (a language which is specific to a particular type of task or activity, and not really intended for use outside it's area).
+
+DSL: html is a DSL for web pages for example, SQL for databases. 
+
+</div>
