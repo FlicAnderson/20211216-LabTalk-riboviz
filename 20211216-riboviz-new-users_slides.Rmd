@@ -106,8 +106,23 @@ https://edcarp.github.io/ - Edinburgh Carpentries, local chapter of The Carpentr
 
 ## Outline: 
 
-* Riboviz & Ribosome Profiling 
-* How Riboviz Works
+* Signs you might need to use riboviz
+* How to talk about riboviz
+* Where to start
+* How to install it 
+* How to run it
+* How riboviz works
+* How to know it's working 
+* How to share your results
+
+## SECOND HALF OUTLINE: 
+
+* What I've learned 
+* What I'd do differently 
+* Obstacles 
+* Outputs 
+* Highlights 
+
 
 
 
@@ -292,40 +307,10 @@ As part of making riboviz more user-friendly, wanted to generate a per-sample .h
 [Riboviz 2.0 pre-print](https://www.biorxiv.org/content/10.1101/2021.05.14.443910v1.full)
 
 
-## What I've Enjoyed About Riboviz: 
-
-* being **part of a team** on a research software development project
-* **learning better practices** in software development 
-* **training others** in software tools & techniques 
-* finding out about **what helps/hinders new users** & researchers
-
- -> starting PhD in Jan 2022:  
-     *What aspects of Research Software projects generate effective & successful software?*  
-    
-  tools, techniques, teaching & environmental factors
 
 
 
-## Questions & A Challenge For You
 
-If you are a software user or developer...  
-**does your scientific method & hypothesis-thinking extend to your software?** 
-
-
-* do you know how to **test** your software like it's a hypothesis? 
-* could someone else **reproduce** your use of software for research and get the same results? 
-* would you **evaluate** data from a new software tool with the same mindset as from an untested wet lab protocol or uncalibrated item of equipment? 
-
-
-*Approach use of research software tools scientifically too!*
-
-
-# Questions For Me?
-
-
-<div class="notes">
-... slide notes ...
-</div> 
 
 
 
@@ -385,30 +370,6 @@ Data: Guydosh & Green (2014). “Dom34 rescues ribosomes in 3' untranslated regi
 
 
 
-## Riboviz Workflow: .PDF Outputs
-
-<div class="centered">
-```{r, out.width = "800"}
-knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/LabTalk-riboviz-20210510/main/images/riboviz-workflow_outputs.png")
-``` 
-</div>  
-
-
-<div class="notes">
-
-Original outputs: .tsv data files and .pdf plot images for each sample. 
-
-Dataset shown: B-Sc_2012: Saccharomyces cerevisiae yeast RPF samples at a range of meiotic phases from: High-resolution View of the Yeast Meiotic Program Revealed by Ribosome Profiling, Brar et al. 2012. https://doi.org/10.1126/science.1215110
-
-Files present: ‘all’ - not all organisms have the same amount of data availale, and so information on tRNAs for example isn't available for all species, or isn't currently in a riboviz friendly format.  
-
-This means we have some 'conditional' outputs. Not all taxa will have all of these outputs, which is something we've had to handle in the code. 
-
-Yaml config file available at https://github.com/riboviz/example-datasets/blob/master/fungi/saccharomyces/Brar_2012_Meiosis_RPF_6-samples_CDS_w_250utrs_config.yaml
-
-This was a dataset selected by Ania Kurowska (undergrad project in the Wallace lab, 2020)
-
-</div>
 
 
 
@@ -425,16 +386,119 @@ Helps with: reproducibility & logging, helpful error handling procedures, ease o
 <font size="2">Jackson, Kavoussanakis & Wallace. (2021). [Using prototyping to choose a bioinformatics workflow management system](https://doi.org/10.1371/journal.pcbi.1008622)</font>  
 
 
-<div class="notes">  
-
-https://www.nextflow.io/
-
-Find out more: Nextflow Carpentries style workshop (alpha!) lesson materials under development https://carpentries-incubator.github.io/workflows-nextflow/
-
-Nextflow connects 'processes' (the steps or tasks) according to their outputs and inputs to other processes. 
- 
-Nextflow combines a **runtime environment** (the stuff that runs other stuff) and a **domain specific language** (a language which is specific to a particular type of task or activity, and not really intended for use outside it's area).
-
-DSL: html is a DSL for web pages for example, SQL for databases. 
-
 </div>
+
+
+
+
+
+
+
+
+
+
+## SECOND HALF OUTLINE: 
+
+* What I've done
+* Obstacles 
+* What I've learned 
+* What I'd do differently 
+* Outputs 
+* Highlights 
+
+
+## What I've done 
+
+Riboviz: 
+
+
+Ed-DaSH: 
+
+
+4273pi: 
+* assisted in online workshops delivering CPD/training to teachers at Scottish schools 
+
+
+## Outputs 
+
+Contributed to papers/articles: 
+
+* riboviz 2 paper with editors - [ - preprint]()
+* Biochemist article: The benefits of an open-science approach in student research projects -  [DOI: 10.1042/bio_2021_198](https://doi.org/10.1042/bio_2021_198)
+* PLOS Computational Biology - manuscript accepted: Bringing bioinformatics to schools with the 4273pi project - []()
+
+Supervised students: 
+
+Undergraduate: 
+* 
+*
+* 
+
+Masters: 
+* 
+
+
+Poster: 
+* RNA 2021 (prize-winning!) 
+
+External Talks: 
+* EdinbR "connecting Rmarkdown, Shiny and Nextflow": [Watch on EdinbR YouTube Channel](https://youtu.be/2C_WpraLznc?t=1596) 
+
+
+Conferences: 
+
+Carpentries Teaching: 
+Instructor: 
+
+Helper: 
+
+
+Host: 
+
+
+
+
+
+## Obstacles
+
+* getting a laptop 
+* vertigo 
+* covid 
+* anxiety 
+* remote teaching / supervision
+
+## What I've learned  
+
+* Real experience of bioinformatics
+* Teaching/instructing software engineering & bioinformatics skills
+* R markdown / html presentations (such as this) :D 
+* I'm more of a software/data engineer than a bioinformatician (ie more informatics than bio)
+* PhD choice!  
+* 
+
+
+
+## What I'd do differently  
+
+* less global pandemics / health issues replicating results of global pandemics 
+* learn more python earlier in the project to be able to review Mike's PRs better & contribute to that side of the codebase more easily (avoid delays)!
+* be more Mike Jackson (see: WWMJD)
+* more user interviews/user sessions. Offer riboviz demo sessions earlier? 
+* be more upfront & clear about how I learn (more requests for pair-programming/hackathon meetings to understand code problems or understand how to develop solutions to project issues; more preparation time needs to be blocked out ahead of workshops/presentations to give me confidence & fluidity in instructing materials)
+* 
+
+
+
+## Highlights 
+
+* being **part of a team** on a research software development project
+* **learning better practices** in software development 
+* **training others** in software tools & techniques 
+* finding out about **what helps/hinders new users** & researchers
+
+ -> starting PhD in Jan 2022:  
+     *What aspects of Research Software projects generate effective & successful software?*  
+  tools, techniques, teaching & environmental factors
+
+
+## Thanks 
