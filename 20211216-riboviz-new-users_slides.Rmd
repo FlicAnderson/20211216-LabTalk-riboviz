@@ -72,42 +72,9 @@ You can check out the code used to make these slides at the [Talk repo](https://
 Source: [tl;drLegal](https://tldrlegal.com/license/mit-license)
 
 
-## Me!
-
-<div style="float: left; width: 30%;">
-```{r, out.width = "300"}
-knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/EdinbR-20210519/main/images/Me.jpg")
-```  
-
-[GitHub](https://github.com/FlicAnderson), [Twitter](https://twitter.com/Flic_Anderson), [LinkedIn](https://www.linkedin.com/in/flicanderson/)
-</div>
-
-<div style="float: right; width: 55%;">
-### Felicity 'Flic' Anderson  
-
-**Research Assistant in Bioinformatics** at the [Wallace Lab](https://ewallace.github.io/), Institute for Cell Biology, University of Edinburgh  
-
-* **developer** on riboviz project; co-supervised 3 undergrad & 1 masters student projects
-* certified **[Carpentries](https://carpentries.org/) instructor** (foundational data, software & coding courses)
-</div>
-
-<div class="notes"> 
-
-https://raw.githubusercontent.com/FlicAnderson/EdinbR-20210519/main/images/Me.jpg
-
-https://ewallace.github.io/ - Wallace lab website
-
-https://edcarp.github.io/ - Edinburgh Carpentries, local chapter of The Carpentries organisation (https://carpentries.org/)
-</div>
-
-
-
-
-
 ## Outline: 
 
 * Signs you might need to use riboviz
-* How to talk about riboviz
 * Where to start
 * How to install it 
 * How to run it
@@ -115,36 +82,7 @@ https://edcarp.github.io/ - Edinburgh Carpentries, local chapter of The Carpentr
 * How to know it's working 
 * How to share your results
 
-## SECOND HALF OUTLINE: 
-
-* What I've learned 
-* What I'd do differently 
-* Obstacles 
-* Outputs 
-* Highlights 
-
-
-
-
 These slides are available [on GitHub](https://github.com/FlicAnderson/20211216-LabTalk-riboviz)
-
-## Riboviz
-
-**Riboviz is open source software which processes & analyses ribosome profiling (sequencing) data**  
-
-*Developed in collaborative project BBSRC-NSF funded project* - apply software engineering techniques to create more robust & reliable code: _**more researcher time** for biological questions_
-
-Ribosome profiling data helps unlock details of **translation**:   
-_how the cell creates proteins from genetic code (DNA, RNA)_ 
-
-riboviz helps researchers check **quality control** & understand the **characteristics** of the experimental data - ie. _do different experimental conditions change how the cell translates proteins from genes?_ 
-
-
-<font size="2">riboviz at github: https://github.com/riboviz/riboviz</font>
-
-<div class="notes">
-Riboviz 2.0 pre-print: https://www.biorxiv.org/content/10.1101/2021.05.14.443910v1.full
-</div>
 
 
 
@@ -167,44 +105,96 @@ Kostas Kavousannakis, Mike Jackson, Junchen Liu
 
 
 
-## Ribosome Profiling Method 
+## Signs you might need to use riboviz 
 
-<div style="float: left; width: 70%;">
-```{r, out.width = "525"}
-knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/EdinbR-20210519/main/images/Ingolia2014_polysomes-to-footprints.png")
-```
-<font size="2">[Ingolia et al. 2014](https://doi.org/10.1038/nrg3645)</font>
-</div>
+You want to:    
 
-<div style="float: right; width: 30%;">
-+ Experimental steps create snippets of **sequence data**
-+ Need to **process** sequence reads to 'undo' the experimental steps 
-+ **Analyse** to get plots & information
-+  **=> riboviz time!**
-</div>
+* **process and analyse ribo-seq data!**  
+* install something that has been tested & works  
+* avoid re-inventing the wheel   
+* see the code (no black boxes)  
+* make all your changes in 1 place  
+* add to the software to answer specific research Qs   
+* cite it*   
 
-<div class="notes">
+<font size="2">* Riboviz 2.0 pre-print: https://www.biorxiv.org/content/10.1101/2021.05.14.443910v1.full</font>
 
-Ribosome Profiling Method involves many experimental steps. 
 
-Processing this data involves effectively trying to 'undo' these steps to get at the meaning of what's happening in those cells.
 
-Sequencing 'reads' are the data we're working with.
+## Goals of riboviz
 
-Take these reads & submit to further processing & analysis to get plots & information.
+* end-to-end processing of Ribo-seq data
+  - raw data through to useful figures
+* flexible and robust
+  - across library prep strategies (multiplexed, UMIs)
+  - across organisms (bacteria, yeast, human, ...)
+  - easy to extend
+* transcript- or ORF-centric
+  - splicing is a different problem
+  - user chooses annotation relevant to their goals
 
-That’s where riboviz comes in!
 
-Processing:
-Multiple steps using a range of other tools ‘plumbed-in’.
 
-Analysis:
-Analyse & quantify data: 
-Create outputs (including for quality-control, further analysis)
+## riboviz uses best practices
 
-Original paper: Ingolia NT, Ghaemmaghami S, Newman JR, Weissman JS (2009). "Genome-wide analysis in vivo of translation with nucleotide resolution using ribosome profiling". Science. 324 (5924): 218–23. doi:10.1126/science.1168978
+* descriptive not prescriptive
+* standard file formats wherever possible (.txt, .bam, .fasta, .gff)
+* all parameters are described in one config file
+* tests ensure that riboviz works correctly
+* scripted with a workflow management system (Nextflow - check out the 'alpha' Carpentries-style [Nextflow workshop](https://carpentries-incubator.github.io/workflows-nextflow/) material) 
 
-</div>
+<font size="2">Best Practices for Scientific Computing - Wilson et al., PLoS Biology, 2014:
+https://doi.org/10.1371/journal.pbio.1001745</font>
+
+
+
+## What riboviz does well
+
+* it works
+  - on many datasets from many species
+  - for many people
+* count reads and assess read frame on pre-annotated ORFs
+* quality control figures are informative
+* easy to add new data for same transcriptome/organism
+* multiplexed data & UMIs work smoothly
+* can trim 5' untemplated mismatches added by Superscript reverse transcriptases
+* thoroughly documented
+
+
+
+## Documentation  
+
+Extensive documentation helps to:   
+* get running with riboviz  
+* configure and adapt riboviz for your dataset   
+* assist with your specific research questions  
+
+Key guides include:
+
+* [configuring riboviz](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-config.md) 
+* [detailed guide to how the riboviz workflow operates](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-operation.md)
+* [how to run the vignette and check results](https://github.com/riboviz/riboviz/blob/main/docs/user/run-vignette.md)
+* [step-by-step how to run the main workflow](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-run-nextflow.md) 
+* [how to get started with a new dataset](https://github.com/riboviz/example-datasets/blob/main/add-new-dataset.md)
+* [visualize your dataset interactively](https://github.com/riboviz/riboviz/blob/develop/docs/user/run-shiny-server-operation.md)
+* [a range of developer guides to assist contributors](https://github.com/riboviz/riboviz/tree/main/docs/developer)
+
+
+
+## What riboviz does not (yet) do (well)
+
+* overlapping ORFs
+  - not tested on RNA viruses
+* discover new ORFs
+* rigorously deal with multimapping reads
+* poor support for matched RNA-seq data
+  - so export counts from riboviz for differential translation
+* new organisms/annotations are getting better, but still need user-effort.
+
+There are other tools.
+
+We are also interested in extending riboviz for **your** needs:   
+Put in a feature request!
 
 
 
@@ -221,6 +211,7 @@ knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/LabTalk-
 Additional organism-specific data files: ie the pipeline can run without them, but will not produce specific plots without them. 
 
 </div> 
+
 
 
 ## Riboviz Workflow: Processing
@@ -241,6 +232,7 @@ Processing:
 * Align reads to transcriptome   
 
 </div>
+
 
 
 ## Riboviz Workflow: Processing
@@ -293,103 +285,167 @@ As part of making riboviz more user-friendly, wanted to generate a per-sample .h
 
 
 
-## What Riboviz Does Well
-
-* it works
-  - on many datasets 
-  - from many species
-  - for many people
-* quality control figures are informative
-* easy to add new data for same transcriptome/organism
-* visualization
-* thoroughly documented
-
-[Riboviz 2.0 pre-print](https://www.biorxiv.org/content/10.1101/2021.05.14.443910v1.full)
-
-
-
-
-
-
-
-
-
-
-
-## Features of Ribosome Profiling Data
-
-* Looking for **3-nucleotide periodicity**: ribosomes moving along mRNA transcript 1 codon (3 nucleotides) at a time  
-
-* Most reads **map to coding regions** (98.8% in Ingolia et al. 2009)  
-* Reasonable read-lengths (e.g. should look for **~28-30NT**)  
-
-* Looking for most reads to be **in one frame**  
-
-
-<font size="2">[Ingolia et al. 2009](https://doi.org/10.1126/science.1168978)</font>
-
-<div class="notes">
-
-[Ingolia et al. 2009 - Science 324(5924):218-23 "Genome-wide analysis in vivo of translation with nucleotide resolution using ribosome profiling", doi: 10.1126/science.1168978](https://doi.org/10.1126/science.1168978).
-
-28-30NT due to the 'width' of the ribosome as this is what 'protected' the mRNA from the nucleases in the experiment's library preparation steps.
-
-</div>
-
-## RPF Data & Reading Frame 
-
+## Riboviz Workflow: ++ Visualization
 
 <div class="centered">
-```{r, out.width = "700"}
-knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/LabTalk-riboviz-20210510/main/images/riboviz-output_frame.png")
+```{r, out.width = "800"}
+knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/LabTalk-riboviz-20210510/main/images/riboviz-workflow_visualization.png")
 ``` 
 </div>
 
-Many of riboviz's output plots let us examine these features.  
-
-
-<font size="2">Reading Frame: https://www.ncbi.nlm.nih.gov/Class/MLACourse/Original8Hour/Genetics/readingframe.html; Data: Guydosh & Green (2014). DOI: [10.1016/j.cell.2014.02.006](https://doi.org/10.1016/j.cell.2014.02.006).</font>
-
+https://github.com/riboviz/riboviz/blob/develop/docs/user/run-shiny-server-operation.md
 
 <div class="notes">
 
-Ribosome profiling data is really useful for investigating translational mechanics particularly because of the information it provides about the active open reading frame!
+Can generate an R-shiny application based interactive space to explore your output data, allowing you to select specific samples, output plots, etc. New features can be added to this. 
 
-Because a codon is 3 nucleotides, where a ribosome 'starts' reading the mRNA will affect what's translated. 
+</div>  
 
-Can locate the start codon ‘AUG’ (from annotation position information from a .gff or sequence info) & determine what should be the reading frame based on that. 
 
-Can determine which reading frame(s) are being actively translated from the counts of reads sequenced which match each frame. Can look at if this is altered by particular characteristics of the gene or sequence for example.
 
-Outputs like these help users determine whether the data looks as expected (assists QC).  
+## riboviz workflow by sample
 
-Data: Guydosh & Green (2014). “Dom34 rescues ribosomes in 3' untranslated regions.” Cell. 156 (5): 950-62. doi: 10.1016/j.cell.2014.02.006.   
+* **cutadapt** trim adapters
+* **hisat2** to contaminants, align & discard
+* **hisat2** to transcriptome, align & keep
+* **trim_5p_mismatch** remove untemplated 5' 
+* **samtools** sort and index bam file
+* **bedtools genomecov** output bedgraphs
+* **bam_to_h5.R** count reads by 5' position and read length
+* **generate_stats_figs.R** read frame and read counts by ORF
 
+There are options, e.g. multiplexing, UMIs.
+
+
+
+## Finding and interpreting riboviz output  
+
+Where does the output go? 
+
+
+
+<div class="notes">
+ - talk through where the files are
+ - show and talk through .html output from the new downsampled dataset.
+ - have one example from another full-size dataset to compare?
+</div>
+
+
+# How to adapt to your own dataset
+
+<div class="notes">
+focus on key considerations: 
+ - annotation files (inc. contaminants) - checkfastagff tool
+ - the annotation file follows the biological question and must be chosen by the user
+ - read structure (adapters, UMI/regex)
+ - everything goes in config.yaml
+refer to documentation for config.yaml
+explain example-datasets repository
 </div>
 
 
 
+## Key ingredients for a new dataset
+
+For each dataset:
+
+- read structure / library prep
+- the raw data as fastq files
+
+For new organisms or strains:
+
+- transcript sequences and CDS maps
+- contaminant sequences
+
+Build from the most relevant example dataset: 
+
+https://github.com/riboviz/example-datasets
+
+
+
+## example-datasets repository is where we add new datasets
+
+This example-datasets repository is for the configuration files and genome/annotation files needed to run the riboviz ribosome profiling pipeline on specific datasets. 
+
+It aims to:
+
+- provide specific example datasets for new users to try or to adapt
+- share up-to-date tested example datasets between the riboviz development team
+
+https://github.com/riboviz/example-datasets
+
+
+
+## Example datasets are collected by organism
+
+https://github.com/riboviz/example-datasets
 
 
 
 
-## How Riboviz Works
+## Read structure
 
-Riboviz has lots of steps - some of which run external tools (like [`cutadapt`](https://cutadapt.readthedocs.io/en/stable/) for removing adapters from mRNA transcript sequences), some of which are bespoke processing or analysis code.
-
-Biological data pipelines can often be unweildy... We use a Workflow Management System called **[Nextflow](https://www.nextflow.io/)**  
-
-Nextflow handles the admin-related tasks for us (check **files exist**, create **log files**, queue & **run tasks efficiently**)
-
-Helps with: reproducibility & logging, helpful error handling procedures, ease of use & re-running, usable by other researchers elsewhere! 
-
-<font size="2">Jackson, Kavoussanakis & Wallace. (2021). [Using prototyping to choose a bioinformatics workflow management system](https://doi.org/10.1371/journal.pcbi.1008622)</font>  
-
-
+- Read the methods section for adapters, barcodes, UMIs
+- If you did the library prep, you know this
+- [UMI-tools](https://github.com/CGATOxford/UMI-tools/) allows flexible descriptions of barcodes and UMIs
+  - `(?P<umi_1>.{8})` extracts an 8nt UMI from the 5' end of the read. 
+  - `^(?P<umi_1>.{4}).+(?P<umi_2>.{4})(?P<cell_1>.{3})$` extracts a 3nt barcode from the 3' end of a read then extracts a 4nt UMI from the 5' end and a 4nt UMI from the 3' end.
+  
+<div class="notes"> 
+riboviz includes mini test datasets including UMIs and barcodes: https://github.com/riboviz/riboviz/blob/main/docs/user/run-dedup-demultiplex-examples.md
 </div>
 
 
 
+## Transcript data needed for new organisms
+
+This is the most unpredictable part, sadly. Budget 1-2 weeks.
+
+**EITHER transcriptome:** use a published genome annotation with UTRs and splicing to create stranded transcript sequences in fasta format.
+
+*But*, these are available for few organisms, and usually have weird formatting problems.
+
+**OR padded ORFeome:** For each open reading frame of interest, the (spliced) ORF with fixed-with genomic sequence either side...
+
+
+
+## Pick the annotation relevant to your biological question
+
+| transcriptome  | padded ORFeome  |
+|---|---|
+| more realistic  | easier to generate  |
+| all mRNAs  | ORF translation only |
+| UTRs, uORFs  | -  |
+
+
+
+## How to check the annotation
+
+Reality-check your fasta and gff match with `check_fasta_gff.py` included with riboviz:
+
+* start codons
+* stop codons
+* sense codons (no internal stops)
+
+This flags big problems, like reverse-strand reads or intron inclusion.
+
+You can still run riboviz on an annotation with errors: it is descriptive not prescriptive.
+
+<div class="notes"> 
+For user documentation on how to do this, check here: https://github.com/riboviz/riboviz/blob/main/docs/user/check-fasta-gff.md
+</div>
+
+
+
+## Contaminants
+
+- ribosomal rRNA
+- transfer RNA, snoRNA
+- other abundant non-coding RNAs
+
+Start with your favourite organism database or rRNA database.
+
+Ensembl, Silva rRNA database, FungiDB, VEUpathDB, Ensembl, BLAST, ...
 
 
 
@@ -397,108 +453,6 @@ Helps with: reproducibility & logging, helpful error handling procedures, ease o
 
 
 
-## SECOND HALF OUTLINE: 
-
-* What I've done
-* Obstacles 
-* What I've learned 
-* What I'd do differently 
-* Outputs 
-* Highlights 
 
 
-## What I've done 
-
-Riboviz: 
-
-
-Ed-DaSH: 
-
-
-4273pi: 
-* assisted in online workshops delivering CPD/training to teachers at Scottish schools 
-
-
-## Outputs 
-
-Contributed to papers/articles: 
-
-* riboviz 2 paper with editors - [ - preprint]()
-* Biochemist article: The benefits of an open-science approach in student research projects -  [DOI: 10.1042/bio_2021_198](https://doi.org/10.1042/bio_2021_198)
-* PLOS Computational Biology - manuscript accepted: Bringing bioinformatics to schools with the 4273pi project - []()
-
-Supervised students: 
-
-Undergraduate: 
-* 
-*
-* 
-
-Masters: 
-* 
-
-
-Poster: 
-* RNA 2021 (prize-winning!) 
-
-External Talks: 
-* EdinbR "connecting Rmarkdown, Shiny and Nextflow": [Watch on EdinbR YouTube Channel](https://youtu.be/2C_WpraLznc?t=1596) 
-
-
-Conferences: 
-
-Carpentries Teaching: 
-Instructor: 
-
-Helper: 
-
-
-Host: 
-
-
-
-
-
-## Obstacles
-
-* getting a laptop 
-* vertigo 
-* covid 
-* anxiety 
-* remote teaching / supervision
-
-## What I've learned  
-
-* Real experience of bioinformatics
-* Teaching/instructing software engineering & bioinformatics skills
-* R markdown / html presentations (such as this) :D 
-* I'm more of a software/data engineer than a bioinformatician (ie more informatics than bio)
-* PhD choice!  
-* 
-
-
-
-## What I'd do differently  
-
-* less global pandemics / health issues replicating results of global pandemics 
-* learn more python earlier in the project to be able to review Mike's PRs better & contribute to that side of the codebase more easily (avoid delays)!
-* be more Mike Jackson (see: WWMJD)
-* more user interviews/user sessions. Offer riboviz demo sessions earlier? 
-* be more upfront & clear about how I learn (more requests for pair-programming/hackathon meetings to understand code problems or understand how to develop solutions to project issues; more preparation time needs to be blocked out ahead of workshops/presentations to give me confidence & fluidity in instructing materials)
-* 
-
-
-
-## Highlights 
-
-* being **part of a team** on a research software development project
-* **learning better practices** in software development 
-* **training others** in software tools & techniques 
-* finding out about **what helps/hinders new users** & researchers
-
- -> starting PhD in Jan 2022:  
-     *What aspects of Research Software projects generate effective & successful software?*  
-  tools, techniques, teaching & environmental factors
-
-
-## Thanks 
+# Extra Technical Info / Explanations
