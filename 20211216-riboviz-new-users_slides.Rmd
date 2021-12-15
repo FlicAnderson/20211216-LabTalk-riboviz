@@ -79,8 +79,8 @@ Source: [tl;drLegal](https://tldrlegal.com/license/mit-license)
 * How to install it 
 * How to run it
 * How riboviz works
-* How to know it's working 
-* How to share your results
+* How to check your results
+* How to develop riboviz
 
 These slides are available [on GitHub](https://github.com/FlicAnderson/20211216-LabTalk-riboviz)
 
@@ -118,6 +118,190 @@ You want to:
 * cite it*   
 
 <font size="2">* Riboviz 2.0 pre-print: https://www.biorxiv.org/content/10.1101/2021.05.14.443910v1.full</font>
+
+
+
+## Where to start
+
+Skills you need:  
+
+- **unix shell** / command line   
+- **git** (& github) version control skills  
+- basic *text editing* for the yaml configuration file  
+- (basic *regular expressions* - optional, required if you have UMIs in your data!)  
+- (*cluster computing* on Eddie - optional, but useful!)  
+
+
+
+## How to install riboviz & dependencies
+
+Easiest on Linux systems (possible to do from Windows/Mac, but developed/tested - in Ubuntu/CentOS linux).  
+
+**["Install guide for riboviz & dependencies" in `docs/user/install.md` ](https://github.com/riboviz/riboviz/blob/main/docs/user/install.md)** 
+
+**On Eddie compute cluster?**  Check and follow our documentation on setting up to run riboviz on Eddie at ["Running the riboviz workflow on Eddie" in `docs/user/run-on-eddie.md`](https://github.com/riboviz/riboviz/blob/develop/docs/user/run-on-eddie.md). Check with Edward that you've got access to `wallace_rna` lab group space for shared libraries.
+
+**Containers:** install using docker/singularity - follow guides at the [riboviz containers repository](https://github.com/riboviz/containers)
+
+**Developer dependencies:** for extra packages to get if you're developing or running tests look in [/docs/developer/install.md](https://github.com/riboviz/riboviz/blob/main/docs/developer/install.md)
+
+
+
+## Assembling your input files
+
+Check [example-datasets repository](https://github.com/riboviz/example-datasets) first, in case some of the files you need are already there...
+
+Also check the [issue tickets](https://github.com/riboviz/example-datasets/issues) in case it's in progress already!
+
+Require: 
+
+* configuration file `.yaml`
+* contaminants file `.fasta`
+* annotation files `.fasta` & `.gff`
+* sample reads file `.fastq`
+
+
+## Assembling your input files
+
+**Configuration file:**  
+
+- Check out [this repo](https://github.com/riboviz/generate-yaml) for a [shiny app](https://riboviz.shinyapps.io/generate-yaml/) that helps you generate a configuration file by Graphical User Interface.   
+- the [example-datasets repository](https://github.com/riboviz/example-datasets) holds configuration files for public datasets published from a wide variety of species across several kingdoms, and also holds the annotation/contaminants files required for those datasets.   
+- For smaller test dataset configs, view the example configuration files for the vignette datasets in the [`vignette/`](https://github.com/riboviz/riboviz/tree/main/vignette) folder. 
+
+
+
+## Assembling your input files
+
+**Contaminants file:**  
+- ribosomal rRNA  
+- transfer RNA, snoRNA  
+- other abundant non-coding RNAs  
+
+Start with your favourite organism database or rRNA database. Ensembl, Silva rRNA database, FungiDB, VEUpathDB, Ensembl, BLAST, etc.   
+
+Described and with examples available with `provenance.txt` files explaining how they were created for many taxa in [example-datasets](https://github.com/riboviz/example-datasets#contaminant-files). 
+
+
+
+## Assembling your input files
+
+**Annotation files:**  
+
+* `.fasta` file of *transcript/extended-ORF sequences* (positive-strand only) AND `.gff` file giving *CDS/ORF/gene-feature position* within the matching `.fasta` file.  
+* *Transcriptome-centric* annotation rather than genome annotation to reduce problems within analysis caused by splicing and antisense/opposite-strand reads. 
+* Instructions on *generating* transcript-centric annotation files in [How to set up a new dataset](https://github.com/riboviz/example-datasets/blob/main/add-new-dataset.md#setting-up-a-new-species), including details on a script for this in `create_riboviz_style_cds_gff_acope3-278` branch of riboviz.  
+* Check the discussions on riboviz issue ticket [#278 - Creating riboviz-friendly fasta and gff files](https://github.com/riboviz/riboviz/issues/278). 
+
+
+
+## Assembling your input files
+
+STOP: Are your annotation FASTA and GFF files riboviz-friendly? 
+
+Follow ["Check FASTA and GFF files for coding sequence (CDS) features" at `docs/user/check-fasta-gff.md`](https://github.com/riboviz/riboviz/blob/main/docs/user/check-fasta-gff.md) and run the riboviz tool `check_fasta_gff` to check. 
+
+* If it reports very few issues, ie. only tens, of which most can be traced back to biologically-interesting quirks with some googling and investigation of those genes, GOOD.  
+* If the issue summary shows lots of issues, consider the quality of your transcriptome files or consider generating your own if you haven't already. 
+* If ~half of the reads show issues relating to missing start/stop codons, this might indicate issues with 'strandedness'.  
+
+
+
+## Assembling your input files
+
+**Sample Reads files:**   
+
+* `.fastq` or `.fastq.gz` format files.   
+* If data is publicly available, download them using tools such as the `fasterq-dump` utility from SRA Toolkit. Details of [how to use this tool on Eddie](https://github.com/riboviz/riboviz/blob/main/docs/user/run-on-eddie.md#download-fastq-data-files-from-the-short-read-archive-sra-initial-setup), but if you're working locally, you may have to find system-specific details. 
+* .fastq files are NOT found on example-datasets repository, as they are often several gigabytes large.
+
+
+
+## How to configure riboviz: 
+
+Go to **["Configuring the RiboViz workflow"](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-config.md)** for details on *riboviz input files* & how to *configure* riboviz by creating and editing your configuration file.
+
+**Environment tokens:**   riboviz has a set of [configurable environment variable tokens](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-run-nextflow.md#defining-values-for-environment-variables) you can set to store path information about file locations.  There's an [example vignette](https://github.com/riboviz/riboviz/blob/develop/vignette/riboviz_env.yaml) using environmental tokens to demonstrate how to use them in a config file. This [environment variables example walk-through](https://github.com/riboviz/riboviz/blob/main/docs/user/run-env-vars-example.md) is also helpful in understanding how they work in practice.
+
+**Handling UMIs & Barcodes:** There are some small simulated datasets demonstrating umi extraction, deduplication and demultiplexing features - find out how to find and run them [here](https://github.com/riboviz/riboviz/blob/main/docs/user/run-dedup-demultiplex-examples.md)
+
+
+
+## How to configure riboviz further: 
+
+**System resources:** a [config parameter](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-config.md#configuration-parameters) to be particularly aware of is `num_processes` - this adjusts how many processors will be used by parts of the workflow. When running on Eddie, ensure that `job_num_cpus` isn't greater than `num_processes`.
+
+**Configuring on Eddie cluster**: for how to adjust Eddie job system resources, and how to generate a job script from a config file, check ["Job submission" at docs/user/run-on-Eddie.md](https://github.com/riboviz/riboviz/blob/main/docs/user/run-on-eddie.md#job-submission). All parameters starting `job_` are related to Eddie configuration.
+
+**Upgrading old config files** [this guide](https://github.com/riboviz/riboviz/blob/main/docs/user/upgrade-config.md) details how to run the riboviz `upgrade_config_file` tool on your old config files to get new parameters from the latest version of riboviz. 
+
+
+
+
+
+## How to run riboviz
+
+**Run the vignette:** test your setup with short test 'vignette' - [`docs/user/run-vignette.md`](https://github.com/riboviz/riboviz/blob/main/docs/user/run-vignette.md) 
+
+**Validate your run:** [`--validate-only`](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-run-nextflow.md#validate-configuration) flag lets you check paths, config file and key parameters are valid; highlight potential issues quickly.  
+
+**Downsample your dataset:** use [this riboviz tool](https://github.com/riboviz/riboviz/blob/main/riboviz/tools/subsample_bioseqfile.py) to subsample fastq files for quicker testing/failing.
+
+**Run a full dataset:** When your configuration file is set up & ready to go, [run the full dataset](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-run-nextflow.md#run-the-nextflow-workflow).
+
+**Resume running after a failure:** if the run failed and you want to re-try, or have added a new sample, you can use the [`-resume`](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-run-nextflow.md#run-the-nextflow-workflow) parameter to start from the last successful point. 
+
+
+
+## How riboviz works 
+
+**Different steps:** the different components and processes in the workflow are described in ["What the riboviz workflow does" at docs/user/prep-riboviz-operation.md](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-operation.md). The relevant [configuration parameters](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-operation.md#process-ribosome-profiling-sample-data) for each step are also listed. 
+
+**Work directory:** Nextflow generates a specific directory within a `/work` folder for each iteration of each process. This is described in a section within [docs/user/prep-riboviz-operation.md](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-operation.md#nextflow-work-directory). 
+
+
+
+
+
+## How to check your results (successes)
+
+**Finding Dataset Outputs:** learn more about the output files at [docs/user/riboviz_outputs.md](https://github.com/riboviz/riboviz/blob/main/docs/user/riboviz_outputs.md)
+
+**Visualizations:** riboviz generates separate per-sample .pdf plots by default, but each sample will also have a `.html` report generated which collates the plots for easier viewing & sharing.
+
+**Interactive Visualizations:** to use riboviz' R-shiny interactive dataset explorer, follow this guide at [docs/user/run-shiny-server-operation.md](https://github.com/riboviz/riboviz/blob/main/docs/user/run-shiny-server-operation.md) after running riboviz successfully. If running on Eddie, check out [riboviz issue #431](https://github.com/riboviz/riboviz/issues/431).
+
+**Nextflow reports:** [configuration parameters](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-config.md#configuration-parameters) starting `nextflow_` will let you generate different reports for a dataset run. Using the `-with-report` command line option when running riboviz generates a particularly useful html report. 
+
+
+
+## How to check your results (errors)
+
+**log files:** If a failure occurs, check the hidden `.command.*` files in the step-specific work folders (find how to locate them and which ones to look in [here](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-operation.md#nextflow-work-directory)). `.command.log` is one of my faves when troubleshooting. 
+
+**standard output:** this is the text printed to the terminal when riboviz runs. This helps you see which processes have completed or failed. Standard output text might be captured into a `.o` file on Eddie (described within ["Submitting jobs" in 'docs/user/run-on-eddie.md](https://github.com/riboviz/riboviz/blob/main/docs/user/run-on-eddie.md#submitting-jobs)
+
+The `-ansi-log false` nextflow option (described [here](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-run-nextflow.md#run-the-nextflow-workflow)) shows step-specific hashes in the riboviz output & helps you locate the right directory path when troubleshooting.
+
+
+
+## How to develop riboviz 
+
+**Run the tests:** read ["Developing and running tests" at `docs/developer/testing.md`](https://github.com/riboviz/riboviz/blob/main/docs/developer/testing.md) run tests to check the riboviz workflow produces expected results. Details on how to develop new tests or add to existing ones will be found in `docs/developer/testing.md`, with updates to address [riboviz issue #443](https://github.com/riboviz/riboviz/issues/443)
+
+**Debugging issues:** useful guide on how to debug R scripts from commandline and nextflow tricks & tips in [/docs/developer/debugging.md](https://github.com/riboviz/riboviz/blob/main/docs/developer/debugging.md)
+
+**Learn more about the Nextflow workflow management system**:  
+- check out the 'alpha' Carpentries-style [Nextflow workshop materials](https://carpentries-incubator.github.io/workflows-nextflow/) developed by Ed-DaSH  
+- go to the Nextflow docs at [nextflow.io](https://www.nextflow.io/)
+
+
+
+## How to develop riboviz 
+
+**Riboviz Style Guide:** for tools in python and R to help check code style & details on how to keep riboviz stylish, check [`docs/developer/coding-style`](https://github.com/riboviz/riboviz/blob/main/docs/developer/coding-style.md)
+
+**Riboviz git etiquette:** if contributing to the riboviz codebase, see the [git-branching guide](https://github.com/riboviz/riboviz/blob/main/docs/developer/git-branching-model.md) on how to name branches, what order to merge things, when to run tests, and more. 
 
 
 
@@ -437,15 +621,7 @@ For user documentation on how to do this, check here: https://github.com/riboviz
 
 
 
-## Contaminants
 
-- ribosomal rRNA
-- transfer RNA, snoRNA
-- other abundant non-coding RNAs
-
-Start with your favourite organism database or rRNA database.
-
-Ensembl, Silva rRNA database, FungiDB, VEUpathDB, Ensembl, BLAST, ...
 
 
 
