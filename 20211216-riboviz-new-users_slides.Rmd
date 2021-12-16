@@ -149,6 +149,7 @@ Skills you need:
 - (basic *regular expressions* - optional, required if you have UMIs in your data!)  
 - (*cluster computing* on Eddie - optional, but useful!)  
 
+Worth also checking [Biochemical Society Workshop July 2021 materials](https://github.com/riboviz/workshop-2021-07-02), partially adapted here for more helpful riboviz content.
 
 
 ## How to install riboviz & dependencies
