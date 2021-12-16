@@ -40,4 +40,4 @@ vignettes/*.pdf
 .Renviron
 
 # Rmarkdown html slides output (temporarily gitignore)
-*.html
+#*.html
