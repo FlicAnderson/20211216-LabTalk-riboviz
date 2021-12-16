@@ -74,10 +74,14 @@ Source: [tl;drLegal](https://tldrlegal.com/license/mit-license)
 
 ## Outline: 
 
+* Riboviz 101
 * Signs you might need to use riboviz
 * Where to start
 * How to install it 
+* Assembling your input files
+* How to configure riboviz
 * How to run it
+* The riboviz workflow
 * How riboviz works
 * How to check your results
 * How to develop riboviz
@@ -86,22 +90,36 @@ These slides are available [on GitHub](https://github.com/FlicAnderson/20211216-
 
 
 
-## Thanks/Acknowledgements
+## Riboviz 101
 
-riboviz is a BBSRC-NSF funded collaborative project: 
+**Riboviz is open source software which processes & analyses ribosome profiling (sequencing) data**  
 
-* **The Wallace Lab** - *University of Edinburgh*:  
-Edward Wallace, + past students (Ania Kurowska, Siyin Xue, Emma MacKenzie, Sophie Winterbourne)  
-* **The Shah Lab** -  *Rutgers University*:  
-Premal Shah, John Favate, Alex Cope, Peter Tilton  
-* **The Lareau Lab** - *University of California, Berkeley*:  
-Liana Lareau, Amanda Mok, Vikram Shivakumar  
-* **EPCC** - *University of Edinburgh*:  
-Kostas Kavousannakis, Mike Jackson, Junchen Liu  
+*Developed in collaborative project BBSRC-NSF funded project*
+
+Ribosome profiling data helps unlock details of **translation**:   
+_how the cell creates proteins from genetic code (DNA, RNA)._ 
+
+riboviz helps researchers check **quality control** & understand the **characteristics** of the experimental data - ie. _do different experimental conditions change how the cell translates proteins from genes?_
+
+<font size="2">riboviz at github: https://github.com/riboviz/riboviz</font>
 
 <div class="notes">
-... slide notes ...
+...
 </div>
+
+
+
+## riboviz goals:
+
+* end-to-end processing of Ribo-seq data
+  - raw data through to useful figures
+* flexible and robust
+  - across library prep strategies (multiplexed, UMIs)
+  - across organisms (bacteria, yeast, human, ...)
+  - easy to extend
+* transcript- or ORF-centric
+  - splicing is a different problem
+  - user chooses annotation relevant to their goals
 
 
 
@@ -155,19 +173,11 @@ Also check the [issue tickets](https://github.com/riboviz/example-datasets/issue
 
 Require: 
 
-* configuration file `.yaml`
 * contaminants file `.fasta`
 * annotation files `.fasta` & `.gff`
 * sample reads file `.fastq`
-
-
-## Assembling your input files
-
-**Configuration file:**  
-
-- Check out [this repo](https://github.com/riboviz/generate-yaml) for a [shiny app](https://riboviz.shinyapps.io/generate-yaml/) that helps you generate a configuration file by Graphical User Interface.   
-- the [example-datasets repository](https://github.com/riboviz/example-datasets) holds configuration files for public datasets published from a wide variety of species across several kingdoms, and also holds the annotation/contaminants files required for those datasets.   
-- For smaller test dataset configs, view the example configuration files for the vignette datasets in the [`vignette/`](https://github.com/riboviz/riboviz/tree/main/vignette) folder. 
+* library prep / read structure information (e.g. adapters, UMIs, barcodes used etc.)  
+* configuration file `.yaml`
 
 
 
@@ -217,6 +227,17 @@ Follow ["Check FASTA and GFF files for coding sequence (CDS) features" at `docs/
 
 
 
+## Assembling your input files
+
+**Configuration file:**  
+
+- Check out [this repo](https://github.com/riboviz/generate-yaml) for a [shiny app](https://riboviz.shinyapps.io/generate-yaml/) that helps you generate a configuration file by Graphical User Interface.   
+- the [example-datasets repository](https://github.com/riboviz/example-datasets) holds configuration files for public datasets published from a wide variety of species & annotation/contaminants files required for running them.   
+- View the example files for the small test vignette datasets in [`vignette/`](https://github.com/riboviz/riboviz/tree/main/vignette) folder.  
+- if dataset has *barcodes*, look up [parameters](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-config.md#configuration-parameters) `multiplex_fq_files` and `sample_sheet`. For *UMIs*, pay attention to UMI-specific config parameters `dedup_stats`, `dedup_umis`, `extract_umis`, `group_umis` and `umi_regexp`.
+
+
+
 ## How to configure riboviz: 
 
 Go to **["Configuring the RiboViz workflow"](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-config.md)** for details on *riboviz input files* & how to *configure* riboviz by creating and editing your configuration file.
@@ -238,7 +259,6 @@ Go to **["Configuring the RiboViz workflow"](https://github.com/riboviz/riboviz/
 
 
 
-
 ## How to run riboviz
 
 **Run the vignette:** test your setup with short test 'vignette' - [`docs/user/run-vignette.md`](https://github.com/riboviz/riboviz/blob/main/docs/user/run-vignette.md) 
@@ -250,135 +270,6 @@ Go to **["Configuring the RiboViz workflow"](https://github.com/riboviz/riboviz/
 **Run a full dataset:** When your configuration file is set up & ready to go, [run the full dataset](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-run-nextflow.md#run-the-nextflow-workflow).
 
 **Resume running after a failure:** if the run failed and you want to re-try, or have added a new sample, you can use the [`-resume`](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-run-nextflow.md#run-the-nextflow-workflow) parameter to start from the last successful point. 
-
-
-
-## How riboviz works 
-
-**Different steps:** the different components and processes in the workflow are described in ["What the riboviz workflow does" at docs/user/prep-riboviz-operation.md](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-operation.md). The relevant [configuration parameters](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-operation.md#process-ribosome-profiling-sample-data) for each step are also listed. 
-
-**Work directory:** Nextflow generates a specific directory within a `/work` folder for each iteration of each process. This is described in a section within [docs/user/prep-riboviz-operation.md](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-operation.md#nextflow-work-directory). 
-
-
-
-
-
-## How to check your results (successes)
-
-**Finding Dataset Outputs:** learn more about the output files at [docs/user/riboviz_outputs.md](https://github.com/riboviz/riboviz/blob/main/docs/user/riboviz_outputs.md)
-
-**Visualizations:** riboviz generates separate per-sample .pdf plots by default, but each sample will also have a `.html` report generated which collates the plots for easier viewing & sharing.
-
-**Interactive Visualizations:** to use riboviz' R-shiny interactive dataset explorer, follow this guide at [docs/user/run-shiny-server-operation.md](https://github.com/riboviz/riboviz/blob/main/docs/user/run-shiny-server-operation.md) after running riboviz successfully. If running on Eddie, check out [riboviz issue #431](https://github.com/riboviz/riboviz/issues/431).
-
-**Nextflow reports:** [configuration parameters](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-config.md#configuration-parameters) starting `nextflow_` will let you generate different reports for a dataset run. Using the `-with-report` command line option when running riboviz generates a particularly useful html report. 
-
-
-
-## How to check your results (errors)
-
-**log files:** If a failure occurs, check the hidden `.command.*` files in the step-specific work folders (find how to locate them and which ones to look in [here](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-operation.md#nextflow-work-directory)). `.command.log` is one of my faves when troubleshooting. 
-
-**standard output:** this is the text printed to the terminal when riboviz runs. This helps you see which processes have completed or failed. Standard output text might be captured into a `.o` file on Eddie (described within ["Submitting jobs" in 'docs/user/run-on-eddie.md](https://github.com/riboviz/riboviz/blob/main/docs/user/run-on-eddie.md#submitting-jobs)
-
-The `-ansi-log false` nextflow option (described [here](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-run-nextflow.md#run-the-nextflow-workflow)) shows step-specific hashes in the riboviz output & helps you locate the right directory path when troubleshooting.
-
-
-
-## How to develop riboviz 
-
-**Run the tests:** read ["Developing and running tests" at `docs/developer/testing.md`](https://github.com/riboviz/riboviz/blob/main/docs/developer/testing.md) run tests to check the riboviz workflow produces expected results. Details on how to develop new tests or add to existing ones will be found in `docs/developer/testing.md`, with updates to address [riboviz issue #443](https://github.com/riboviz/riboviz/issues/443)
-
-**Debugging issues:** useful guide on how to debug R scripts from commandline and nextflow tricks & tips in [/docs/developer/debugging.md](https://github.com/riboviz/riboviz/blob/main/docs/developer/debugging.md)
-
-**Learn more about the Nextflow workflow management system**:  
-- check out the 'alpha' Carpentries-style [Nextflow workshop materials](https://carpentries-incubator.github.io/workflows-nextflow/) developed by Ed-DaSH  
-- go to the Nextflow docs at [nextflow.io](https://www.nextflow.io/)
-
-
-
-## How to develop riboviz 
-
-**Riboviz Style Guide:** for tools in python and R to help check code style & details on how to keep riboviz stylish, check [`docs/developer/coding-style`](https://github.com/riboviz/riboviz/blob/main/docs/developer/coding-style.md)
-
-**Riboviz git etiquette:** if contributing to the riboviz codebase, see the [git-branching guide](https://github.com/riboviz/riboviz/blob/main/docs/developer/git-branching-model.md) on how to name branches, what order to merge things, when to run tests, and more. 
-
-
-
-## Goals of riboviz
-
-* end-to-end processing of Ribo-seq data
-  - raw data through to useful figures
-* flexible and robust
-  - across library prep strategies (multiplexed, UMIs)
-  - across organisms (bacteria, yeast, human, ...)
-  - easy to extend
-* transcript- or ORF-centric
-  - splicing is a different problem
-  - user chooses annotation relevant to their goals
-
-
-
-## riboviz uses best practices
-
-* descriptive not prescriptive
-* standard file formats wherever possible (.txt, .bam, .fasta, .gff)
-* all parameters are described in one config file
-* tests ensure that riboviz works correctly
-* scripted with a workflow management system (Nextflow - check out the 'alpha' Carpentries-style [Nextflow workshop](https://carpentries-incubator.github.io/workflows-nextflow/) material) 
-
-<font size="2">Best Practices for Scientific Computing - Wilson et al., PLoS Biology, 2014:
-https://doi.org/10.1371/journal.pbio.1001745</font>
-
-
-
-## What riboviz does well
-
-* it works
-  - on many datasets from many species
-  - for many people
-* count reads and assess read frame on pre-annotated ORFs
-* quality control figures are informative
-* easy to add new data for same transcriptome/organism
-* multiplexed data & UMIs work smoothly
-* can trim 5' untemplated mismatches added by Superscript reverse transcriptases
-* thoroughly documented
-
-
-
-## Documentation  
-
-Extensive documentation helps to:   
-* get running with riboviz  
-* configure and adapt riboviz for your dataset   
-* assist with your specific research questions  
-
-Key guides include:
-
-* [configuring riboviz](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-config.md) 
-* [detailed guide to how the riboviz workflow operates](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-operation.md)
-* [how to run the vignette and check results](https://github.com/riboviz/riboviz/blob/main/docs/user/run-vignette.md)
-* [step-by-step how to run the main workflow](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-run-nextflow.md) 
-* [how to get started with a new dataset](https://github.com/riboviz/example-datasets/blob/main/add-new-dataset.md)
-* [visualize your dataset interactively](https://github.com/riboviz/riboviz/blob/develop/docs/user/run-shiny-server-operation.md)
-* [a range of developer guides to assist contributors](https://github.com/riboviz/riboviz/tree/main/docs/developer)
-
-
-
-## What riboviz does not (yet) do (well)
-
-* overlapping ORFs
-  - not tested on RNA viruses
-* discover new ORFs
-* rigorously deal with multimapping reads
-* poor support for matched RNA-seq data
-  - so export counts from riboviz for differential translation
-* new organisms/annotations are getting better, but still need user-effort.
-
-There are other tools.
-
-We are also interested in extending riboviz for **your** needs:   
-Put in a feature request!
 
 
 
@@ -395,7 +286,6 @@ knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/LabTalk-
 Additional organism-specific data files: ie the pipeline can run without them, but will not produce specific plots without them. 
 
 </div> 
-
 
 
 ## Riboviz Workflow: Processing
@@ -472,12 +362,11 @@ As part of making riboviz more user-friendly, wanted to generate a per-sample .h
 ## Riboviz Workflow: ++ Visualization
 
 <div class="centered">
-```{r, out.width = "800"}
-knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/LabTalk-riboviz-20210510/main/images/riboviz-workflow_visualization.png")
+```{r, out.width = "500"}
+knitr::include_graphics("https://raw.githubusercontent.com/FlicAnderson/20211216-LabTalk-riboviz/main/imgs/riboviz_interactive_viz_vignette.png")
 ``` 
 </div>
-
-https://github.com/riboviz/riboviz/blob/develop/docs/user/run-shiny-server-operation.md
+Vignette example, read lengths plot (both samples)
 
 <div class="notes">
 
@@ -487,33 +376,140 @@ Can generate an R-shiny application based interactive space to explore your outp
 
 
 
-## riboviz workflow by sample
+## How riboviz works 
 
-* **cutadapt** trim adapters
-* **hisat2** to contaminants, align & discard
-* **hisat2** to transcriptome, align & keep
-* **trim_5p_mismatch** remove untemplated 5' 
-* **samtools** sort and index bam file
-* **bedtools genomecov** output bedgraphs
-* **bam_to_h5.R** count reads by 5' position and read length
-* **generate_stats_figs.R** read frame and read counts by ORF
+**Different steps:** the different components and processes in the workflow are described in ["What the riboviz workflow does" at docs/user/prep-riboviz-operation.md](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-operation.md). The relevant [configuration parameters](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-operation.md#process-ribosome-profiling-sample-data) for each step are also listed. 
 
-There are options, e.g. multiplexing, UMIs.
+**Work directory:** Nextflow generates a specific directory within a `/work` folder for each iteration of each process. This is described in a section within [docs/user/prep-riboviz-operation.md](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-operation.md#nextflow-work-directory). 
 
 
 
-## Finding and interpreting riboviz output  
-
-Where does the output go? 
 
 
+## How to check your results (successes)
+
+**Finding Dataset Outputs:** learn more about the output files at [docs/user/riboviz_outputs.md](https://github.com/riboviz/riboviz/blob/main/docs/user/riboviz_outputs.md)
+
+**Visualizations:** riboviz generates separate per-sample .pdf plots by default, but each sample will also have a `.html` report generated which collates the plots for easier viewing & sharing.
+
+**Interactive Visualizations:** to use riboviz' R-shiny interactive dataset explorer, follow this guide at [docs/user/run-shiny-server-operation.md](https://github.com/riboviz/riboviz/blob/main/docs/user/run-shiny-server-operation.md) after running riboviz successfully. If running on Eddie, check out [riboviz issue #431](https://github.com/riboviz/riboviz/issues/431).
+
+**Nextflow reports:** [configuration parameters](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-config.md#configuration-parameters) starting `nextflow_` will let you generate different reports for a dataset run. Using the `-with-report` command line option when running riboviz generates a particularly useful html report. 
+
+
+
+## How to check your results (errors)
+
+**log files:** If a failure occurs, check the hidden `.command.*` files in the step-specific work folders (find how to locate them and which ones to look in [here](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-operation.md#nextflow-work-directory)). `.command.log` is one of my faves when troubleshooting. 
+
+**standard output:** this is the text printed to the terminal when riboviz runs. This helps you see which processes have completed or failed. Standard output text might be captured into a `.o` file on Eddie (described within ["Submitting jobs" in 'docs/user/run-on-eddie.md](https://github.com/riboviz/riboviz/blob/main/docs/user/run-on-eddie.md#submitting-jobs)
+
+The `-ansi-log false` nextflow option (described [here](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-run-nextflow.md#run-the-nextflow-workflow)) shows step-specific hashes in the riboviz output & helps you locate the right directory path when troubleshooting.
+
+
+
+## How to develop riboviz 
+
+**Run the tests:** read ["Developing and running tests" at `docs/developer/testing.md`](https://github.com/riboviz/riboviz/blob/main/docs/developer/testing.md) run tests to check the riboviz workflow produces expected results. Details on how to develop new tests or add to existing ones will be found in `docs/developer/testing.md`, with updates to address [riboviz issue #443](https://github.com/riboviz/riboviz/issues/443)
+
+**Debugging issues:** useful guide on how to debug R scripts from commandline and nextflow tricks & tips in [/docs/developer/debugging.md](https://github.com/riboviz/riboviz/blob/main/docs/developer/debugging.md)
+
+**Learn more about the Nextflow workflow management system**:  
+- check out the 'alpha' Carpentries-style [Nextflow workshop materials](https://carpentries-incubator.github.io/workflows-nextflow/) developed by Ed-DaSH  
+- go to the Nextflow docs at [nextflow.io](https://www.nextflow.io/)
+
+
+
+## How to develop riboviz 
+
+**Riboviz Style Guide:** for tools in python and R to help check code style & details on how to keep riboviz stylish, check [`docs/developer/coding-style`](https://github.com/riboviz/riboviz/blob/main/docs/developer/coding-style.md)
+
+**Riboviz git etiquette:** if contributing to the riboviz codebase, see the [git-branching guide](https://github.com/riboviz/riboviz/blob/main/docs/developer/git-branching-model.md) on how to name branches, what order to merge things, when to run tests, and more. 
+
+Further guides: [a range of developer guides to assist contributors](https://github.com/riboviz/riboviz/tree/main/docs/developer)
+
+
+
+
+## riboviz uses best practices
+
+* descriptive not prescriptive
+* standard file formats wherever possible (.txt, .bam, .fasta, .gff)
+* all parameters are described in one config file
+* tests ensure that riboviz works correctly
+* scripted with a workflow management system 
+
+<font size="2">Best Practices for Scientific Computing - Wilson et al., PLoS Biology, 2014:
+https://doi.org/10.1371/journal.pbio.1001745</font>
+
+
+
+## What riboviz does well
+
+* it works
+  - on many datasets from many species
+  - for many people
+* count reads and assess read frame on pre-annotated ORFs
+* quality control figures are informative
+* easy to add new data for same transcriptome/organism
+* multiplexed data & UMIs work smoothly
+* can trim 5' untemplated mismatches added by Superscript reverse transcriptases
+* thoroughly documented!
+
+
+
+## What riboviz does not (yet) do (well)
+
+* overlapping ORFs
+  - not tested on RNA viruses
+* discover new ORFs
+* rigorously deal with multimapping reads
+* poor support for matched RNA-seq data
+  - so export counts from riboviz for differential translation
+* new organisms/annotations are getting better, but still need user-effort.
+
+There are other tools.
+
+We are also interested in extending riboviz for **your** needs:   
+Put in a feature request!
+
+
+
+## In development... 
+
+"Riboviz Choose Your Own Adventure..."
+
+*Q5: Are you familiar with the Eddie compute cluster?*  
+
+- Yes: You're ready to proceed (Go to Q6)  
+- No: The Eddie team have put together some documentation and an ['Introduction to Eddie' course](https://www.wiki.ed.ac.uk/display/ResearchServices/Introduction+to+Eddie) you can work through to familiarise yourself with the Eddie system. It will requite your unix shell skills, and a university login to access. 
+
+**Coming to a riboviz repo near you soon!**
+
+
+## Thanks/Acknowledgements
+
+[riboviz](https://github.com/riboviz/riboviz) is a BBSRC-NSF funded collaborative project: 
+
+* **The Wallace Lab** - *University of Edinburgh*:  
+Edward Wallace, + past students (Ania Kurowska, Siyin Xue, Emma MacKenzie, Sophie Winterbourne)  
+* **The Shah Lab** -  *Rutgers University*:  
+Premal Shah, John Favate, Alex Cope, Peter Tilton  
+* **The Lareau Lab** - *University of California, Berkeley*:  
+Liana Lareau, Amanda Mok, Vikram Shivakumar  
+* **EPCC** - *University of Edinburgh*:  
+Kostas Kavousannakis, Mike Jackson, Junchen Liu  
 
 <div class="notes">
- - talk through where the files are
- - show and talk through .html output from the new downsampled dataset.
- - have one example from another full-size dataset to compare?
+... slide notes ...
 </div>
 
+
+
+# END.
+
+
+# Extra Technical Info / Explanations
 
 # How to adapt to your own dataset
 
@@ -526,44 +522,6 @@ focus on key considerations:
 refer to documentation for config.yaml
 explain example-datasets repository
 </div>
-
-
-
-## Key ingredients for a new dataset
-
-For each dataset:
-
-- read structure / library prep
-- the raw data as fastq files
-
-For new organisms or strains:
-
-- transcript sequences and CDS maps
-- contaminant sequences
-
-Build from the most relevant example dataset: 
-
-https://github.com/riboviz/example-datasets
-
-
-
-## example-datasets repository is where we add new datasets
-
-This example-datasets repository is for the configuration files and genome/annotation files needed to run the riboviz ribosome profiling pipeline on specific datasets. 
-
-It aims to:
-
-- provide specific example datasets for new users to try or to adapt
-- share up-to-date tested example datasets between the riboviz development team
-
-https://github.com/riboviz/example-datasets
-
-
-
-## Example datasets are collected by organism
-
-https://github.com/riboviz/example-datasets
-
 
 
 
@@ -619,16 +577,3 @@ You can still run riboviz on an annotation with errors: it is descriptive not pr
 For user documentation on how to do this, check here: https://github.com/riboviz/riboviz/blob/main/docs/user/check-fasta-gff.md
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-# Extra Technical Info / Explanations
