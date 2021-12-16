@@ -48,7 +48,7 @@ Y: You're good to proceed. (Go to Q7)
 N: If they're publicly available, you can download them using tools such as the `fasterq-dump` utility from SRA Toolkit. We have details on [how to use this tool on Eddie](https://github.com/riboviz/riboviz/blob/main/docs/user/run-on-eddie.md#download-fastq-data-files-from-the-short-read-archive-sra-initial-setup), but if you're working locally, you may have to find system-specific details. 
 
 Q7: Do you know the adapters for the dataset samples? 
-Y: Keep these handy, as you'll need to include this in the configuration yaml file for the `` parameter - see more details in the riboviz documentation: ["Configuring the Riboviz Workflow"](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-config.md#configuration-parameters). (Go to Q8)
+Y: Keep these handy, as you'll need to include this in the configuration yaml file for the `adapters` parameter - see more details in the riboviz documentation: ["Configuring the Riboviz Workflow"](https://github.com/riboviz/riboviz/blob/main/docs/user/prep-riboviz-config.md#configuration-parameters). (Go to Q8)
 N: If this is a publicly available dataset, check the paper's methods section and supplemental information, and follow some of the troubleshooting steps listed in ["How to Set Up A New Dataset"](https://github.com/riboviz/example-datasets/blob/main/add-new-dataset.md)
 
 Q8: Does your dataset include barcodes? 
